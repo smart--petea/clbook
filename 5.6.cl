@@ -101,3 +101,19 @@
 ;   ((THROW 3 AND 4 -- 7 -- YOU WIN
 ;>(craps)
 ;   (THROW 2 AND 4 -- YOUR POINT IS 6)
+(defun craps()
+  (let 
+    ( (throww (throw-dice)))
+     (print 'throw)
+     (print (first throww))
+     (print 'and)
+     (print (second throww))
+     (print '--)
+     (cond
+       ((instant-win-p throww) (and ))
+       )
+     (print (say-throw throww))
+    )
+  )
+
+(craps)
