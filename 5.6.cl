@@ -110,10 +110,67 @@
      (print (second throww))
      (print '--)
      (cond
-       ((instant-win-p throww) (and ))
+       ((instant-win-p throww)
+        (and 
+          (print (say-throw throww))
+          (print '--)
+          (print 'you)
+          (print 'win)
+          )
+        )
+       ((instant-loss-p throww) 
+        (and
+          (print (say-throw throww))
+          (print '--)
+          (print 'you)
+          (print 'lose)
+          )
        )
-     (print (say-throw throww))
+       (t 
+         (and
+           (print 'your)
+           (print 'point)
+           (print 'is)
+           (print (say-throw throww))
+           )
+         )
+    )
+  )
+  )
+
+;(craps)
+
+;g. Once a point has been established, you continue throwing the dice
+;until you either win by making the point again or lose by thowing a 7. Write the function TRY-FOR-POINT that simulates
+;this part of the game, as follows:
+;>(try-for-point 6)
+;(THROW 3 AND 5 -- 8 -- TRHOW AGAIN)
+;>(try-for-point 6)
+;(THROW 5 AND 1 -- 6 -- YOU WIN)
+;>(craps)
+;(THROW 3 AND 6 -- YOUR POINT IS 9)
+;>(try-for-point 9)
+;(THROW 6 AND 1 -- 7 -- YOU LOSE)
+(defun try-for-point(x)
+  (let* (
+         (throww (throw-dice))
+         (frst (first throww))
+         (scnd (second throww))
+         (sm (+ frst scnd))
+         )
+    (print 'throw)
+    (print frst)
+    (print 'and)
+    (print scnd)
+    (print '--)
+    (print sm)
+    (print '--)
+    (cond
+      ((equal sm x) (and (print 'you) (print 'win)))
+      ((equal sm 7) (and (print 'you) (print 'lose)))
+      (t (and (print 'throw) (print 'again)))
+      )
     )
   )
 
-(craps)
+(try-for-point 10)
