@@ -81,3 +81,132 @@
 
 ;(print (fetch '(B2 COLOR ?)))
 ;(print (fetch '(? SUPPORTS B1)))
+
+;d.
+;Use FETCH with patterns you construct yourself to answer the
+;following questions. What shape is block B4?
+(print (fetch '(B4 SHAPE ?)))
+;Which blocks are bricks
+(print (fetch '(? SHAPE BRICK)))
+;What relation is block B2 to block B3?
+(print (fetch '(B2 ? B3)))
+;List the color of every block.
+(print (fetch '(? COLOR ?)))
+;What facts are known about block B4?
+(print (fetch '(B4 ? ?)))
+
+
+;e.
+;Write a function that takes a block name as input and returns a
+;pattern asking the color of the block. For example, given the input
+;B3, your function should return the list (B3 COLOR ?)
+(defun color-pattern(block-name)
+  (list block-name 'color '?)
+  )
+
+;(print (color-pattern 'b3))
+
+;f.
+;Write a function SUPPORTERS that takes one input, a block, and
+;returns a list of the blocks that support it. (SUPPORTERS 'B1)
+;should return the list (B2 B3). Your function should work by
+;constructin a pattern containing the block's name, using that
+;pattern as input to FETCH, and then extracting the block names
+;from the resulting list of assertions
+(defun supporters(block-name)
+  (mapcar
+    #'car
+    (fetch 
+        (list
+            '?
+            'supports
+            block-name
+            )
+        )
+    )
+  )
+
+;(print (supporters 'b1))
+
+;g.
+;Write a predicate SUPP-CUBE that takes a block as input and
+;returns true if that block is supported by a cube. (SUPP-CUBE 'B4)
+;should return a true value; (SUPP-CUBE 'B1) should not because
+;B1 is supported by bricks but not cubes. Hint: Use the result of the
+;SUPPORTERS function as a starting poing
+(defun supp-cube(block-name)
+  (not
+    (not
+        (find-if
+            #'(lambda(e)
+                (fetch 
+                    (list
+                        e
+                        'shape
+                        'cube
+                    )
+                )
+            )
+            (supporters block-name)
+            )
+        )
+    )
+  )
+
+;(print (supp-cube 'b4))
+;(print (supp-cube 'b1))
+
+;h.
+;We are going to write a DESCRIPTION function that returns the
+;description of a block. (DESCRIPTION 'B2) will return (SHAPE
+;BRICK COLOR RED SIZE SMALL SUPPORTS B1 LEFT-OF B3). We will do this in steps. 
+;First, write a function DESC1 that
+;takes a block as input and returns all assertions dealing with that
+;block. (DESC1 'B6) shoul return ((B6 SHAPE BRICK) (B6 COLOR PURPLE) (B6 SIZE LARGE)).
+(defun desc1(block-name)
+  (fetch 
+    (list
+      block-name
+      '?
+      '?
+      )
+    )
+  )
+
+;(print (desc1 'b6))
+
+;i.
+;Write a function DESC6 of one input that calls DESC1 and strips
+;the block name off each element of the result. (DESC2 'B6) should
+;return the list ((SHAPE BRICK) (COOLOR PURPLE) (SIZE LARGE)).
+(defun desc2(block-name)
+  (mapcar
+    #'cdr
+    (desc1 block-name)
+    )
+  )
+
+;(print (desc2 'b6))
+
+;j.
+;Write the DESCRIPTION function. It should take one input, call
+;DESC2, and merge the resulting list of lists into a single list.
+;(DESCRIPTION 'B6) should return (SHAPE BRICK COLOR PURPLE SIZE LARGE).
+(defun description(block-name)
+  (reduce
+    #'append
+    (desc2 block-name)
+    )
+  )
+;(print (description 'b2))
+
+;k.
+;What is the description of block B1? Of block B4?
+(print (description 'b1))
+(print (description 'b4))
+
+;l.
+;Block B1 is made of wood, but block B2 is made of plastic. How
+;would you add this information to the database?
+(setf database (append database '((b1 material plastic)) '((b2 material wood))))
+(print database)
