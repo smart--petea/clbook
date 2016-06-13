@@ -111,5 +111,72 @@
     )
   )
 
-(print (siblings 'bruce))
-(print (siblings 'zelda))
+;(print (siblings 'bruce))
+;(print (siblings 'zelda))
+
+;c.
+;Write MAPUNION, an applicative operator that takes a function and
+;a list as input, applies the function to every element of the list, and
+;computes the union of all the the results. An example is (MAPUNION #'REST '((1 A B C) (2 E C J)(3 F A B C D))),
+;which should return the set (A B C E J F D). Hint: MAPUNION can be defined as a
+;combination of two applicative operators you already know.
+(defun mapunion(foo lst)
+  (remove-duplicates
+    (reduce
+      #'append
+      (mapcar
+        foo
+        lst
+        )
+      )
+    )
+  )
+
+;(print (mapunion #'REST '((1 A B C)(2 E C J)(3 F A B C D))))
+
+;d. 
+;Write GRANDPARENTS, a function that returns the set of a 
+;person's grandparents. Use MAPUNION in your solution.
+(defun grandparents(name)
+  (mapunion
+    #'parents
+    (parents name)
+    )
+  )
+
+;(print (grandparents  'tamara)) 
+
+;e.
+;Write COUSINS, a function that returns the set of a person's
+;geneticaally related first cousings, in other words, the children of any of their
+;parents's siblings.
+;(COUSINS 'JULIE) should return the set (TAMARA VINCENT NIGEL). Use
+;MAPUNION in your solution
+(defun cousins(name)
+  (remove-if
+    #'(lambda (e)
+        (member
+          e
+          (mapunion
+            #'children
+            (parents name)
+            )
+          )
+        )
+
+    (mapunion
+      #'children
+      (mapunion
+        #'children
+        (grandparents name)
+        )
+      )
+    )
+  )
+
+(print (cousins 'JULIE))
+;(print (mapunion
+;         #'children
+;         (parents 'JULIE)
+;         )
+;       )
