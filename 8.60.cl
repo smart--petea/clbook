@@ -215,3 +215,54 @@
 ;(ELLEN ARTHUR KATE GEORGE FRANCK LINDA).
 ;(Hint: A person's acestors are his parents plus his parent's acestors.
 ;This is a recursive definition.)
+(defun ancestors(name)
+  (cond
+    ((null name) nil)
+    (t
+      (append
+        (parents name)
+        (reduce
+          #'append
+          (mapcar
+            #'ancestors
+            (parents name)
+            )
+          )
+        )
+      )
+    )
+  )
+
+;(print (ancestors 'marie))
+
+;h.
+;Write the recursive function GENERATION-GAP that returns the
+;number of generations separating a person and one of his or her
+;acenstors. (GENERATION-GAP 'SUZANNE 'COLIN) should return one.
+;(GENERATION-GAP 'FREDERICK 'COLIN) should return three.
+;(GENERATION-GAP 'FREDERICK 'LINDA) should return NIL, because Linda is not an 
+;ancestor of Frederick
+(defun generation-gap-recursive(name from i)
+    (cond
+      ((null name) nil)
+      ((member from (parents name)) (+ i 1))
+      (t (find-if
+           #'(lambda (e) (numberp e))
+           (mapcar
+             #'(lambda (ss)
+                 (generation-gap-recursive ss from (+ i 1))
+                 )
+             (parents name)
+             )
+           )
+         )
+      )
+    )
+
+(defun generation-gap(name from)
+  (generation-gap-recursive name from 0)
+  )
+
+;(print (generation-gap 'SUZANNE 'COLIN))
+;(print (generation-gap 'FREDERICK 'COLIN))
+;(print (generation-gap 'FREDERICK 'LINDA))
