@@ -174,9 +174,44 @@
     )
   )
 
-(print (cousins 'JULIE))
-;(print (mapunion
-;         #'children
-;         (parents 'JULIE)
-;         )
-;       )
+;(print (cousins 'JULIE))
+
+;f.
+;Write the two-input recursive predicate DESCENDED-FROM that
+;returns a true value if the first person is descended from the second.
+;(DESCENDED-FROM 'TAMARA 'ARTHUR) should return T.
+;(DESCENDED-FROM 'TAMARA 'LINDA) should return NIL.
+;(Hint: You are descended from someone if he is one of your parents. or
+;if either your father or mother is descended from him.
+;This is a recursive definition.)
+(defun descended-from(name from)
+  (cond
+    ((null from) nil)
+    ((member from (parents name)) t)
+    (t
+      (not
+        (not
+          (member
+            t
+            (mapcar
+              #'(lambda(parent)
+                  (descended-from parent from)
+                  )
+              (parents name)
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+
+;(print (descended-from 'TAMARA 'ARTHUR))
+;(print (descended-from 'TAMARA 'LINDA))
+
+;g.
+;Write the recursive function ACESTORS that returns a person's
+;set of acestors. (ANCESTORS 'MARIE) should return the set
+;(ELLEN ARTHUR KATE GEORGE FRANCK LINDA).
+;(Hint: A person's acestors are his parents plus his parent's acestors.
+;This is a recursive definition.)
