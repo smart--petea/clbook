@@ -76,4 +76,41 @@
     )
   )
 
-(print (generate -3 3))
+;(print (generate -3 3))
+
+;e. 
+;Write the MAKE-GRAPH function. MAKE-GRAPH should
+;prompt for the values of FUNC, START, END, and PLOTTING-STRING
+;and then graph the function. Note: You can pass FUNC as an input to MAPCAR
+;to generate the list of y values for the function. What will the second input to MAPCAR be?
+
+;f.
+;Define the SQUARE function and graph it over the range -7 to 7.
+;Use your first name as the plotting symbol
+(defun square(x)
+  (* x x)
+  )
+
+(defun get-param(name)
+  (OR (format t "~&~A: " name) (read))
+  )
+
+(defun make-graph()
+  (let
+    (
+     (func (get-param 'func))
+     (start (get-param 'start))
+     (end (get-param 'end))
+     (plotting-string (get-param 'plotting-string))
+     )
+    (plot-points
+      plotting-string
+      (mapcar
+       func
+       (generate start end)
+       )
+      )
+    )
+  )
+
+(make-graph)

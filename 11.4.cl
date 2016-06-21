@@ -1,0 +1,10 @@
+;Write an iterative version of LENGTH, called IT-LENGTH
+(defun it-length(lst)
+  (let ((lngt 0))
+    (dolist (e lst lngt)
+      (1+ lngt)
+      )
+    )
+  )
+(print (length '(a b c)))
+(print (length nil))
