@@ -184,3 +184,15 @@
 ;prefixes of increasing length until you find one that can be repeated
 ;to cover the strand.
 
+(defun kernel(strand)
+  (do*
+    ((strand-temp strand (cdr strand-temp))
+     (result (list (car strand)) (append result (list (car strand-temp))))
+     )
+    ((coverp result strand) result)
+    )
+  )
+
+;(print (kernel '(A A A A A)))
+;(print (kernel '(A g G T C)))
+;(print (kernel '(A G C A G C A G C)))
