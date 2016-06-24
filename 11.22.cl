@@ -125,3 +125,62 @@
 ;x is either a prefix of y, or of (rest y), or of (rest (rest y)),
 ;and so on.
 
+(defun appearsp(frst scnd)
+  (do*
+    ((scnd-temp scnd (cdr scnd-temp)))
+    ((null scnd-temp) nil)
+    (when (prefixp frst scnd-temp) (return t))
+    )
+  )
+
+;(print (appearsp '(c a t) '(t c a t g)))
+;(print (appearsp '(c a t) '(t c g t g)))
+
+;g.
+;Writ a predicate COVERP that returns T if its first input, repeated
+;some number of times, matches all of its second input. Example:
+;(A G C) covers (A G C A G C A G C) but not (A G C T T G). You
+;may assume that neither strand will be NIL
+(defun coverp(cover lst)
+  (do
+    ((lst-temp lst (cdr lst-temp)))
+    ((not (prefixp cover lst-temp)) nil)
+    (when (null lst-temp) (return t))
+    (do
+      ((cover-temp (cdr cover) (cdr cover-temp)))
+      ((null cover-temp) t)
+      (setf lst-temp (cdr lst-temp))
+      )
+    )
+  )
+
+;(print (coverp '(a g c) '(a g c a g c a g c)))
+;(print (coverp '(a g c) '(a g c a g  a g c)))
+
+;h.
+;Write a function PREFIX that returns the leftmost N bases of A DNA
+;strand. (PREFIX 4 '(C G A t T A G)) should return (C G A T). Do
+;not confuse the function PREFIX with the predicate PREFIXP
+(defun prefix(n lst)
+  (do*
+    ((i 1 (1+ i))
+     (lst-temp lst (cdr lst-temp))
+     (result  (list (car lst-temp)) (append result (list (car lst-temp)))))
+    ((equal i n) result)
+    )
+  )
+
+;(print (prefix 4 '(C G A T T A G)))
+
+;i.
+;Biologists have found that portions of some naturally occurring
+;DNA strands consist of many repetitions of a short "kernel"
+;sequence. Write a function KERNEL that returns the shortes prefix
+;of a DNA strand that can be repeated to cover the strand.
+;(KERNEL '(A G C A G C A G C)) should return (A G C). (KERNEL '(A A A A A))
+;should return (A). (KERNEL '(A G G T C)) should return (A G G T C), 
+;because in this case only a single repetition of the entire 
+;strand will cover the strand. Hint: to find the kernel, look at
+;prefixes of increasing length until you find one that can be repeated
+;to cover the strand.
+
