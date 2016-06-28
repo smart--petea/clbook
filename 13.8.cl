@@ -40,6 +40,14 @@
     )
   )
 
-(record-value 5)
-(print *total-points*)
-(print *hist-array*)
+;(record-value 5)
+;(print *total-points*)
+;(print *hist-array*)
+
+;d.
+;Write a function PRINT-HIST-LINE that takes a value from zero to
+;ten as input, looks up that value in the array, and prints the
+;corresponding line of the histogram. To get the numbers to line up
+;in columns propertly, you will need to use the format directives ~2S
+;to display the value and ~3S to display the count. You can use a 
+;DOTIMES to print the asterisks.
